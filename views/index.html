@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <title>Dashboard | <%- name %></title>
+        <link rel = "stylesheet" href = "/style.css" />
+        <link rel = "icon" type = "image/x-icon" href = "<%- favicon %>" />
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <nav>
+            <img src = "<%- favicon %>" width = "50" height = "50" />
+            <h2 style = "font-weight: normal; margin-left: 5px;"><%- name %></h2>
+            <button onclick = "document.getElementById('create-folder').showModal()" style = "margin-left: auto;">
+                Create Folder
+            </button>
+            <button onclick = "document.getElementById('upload-file').showModal()" style = "margin-left: 15px;">
+                Upload
+            </button>
+        </nav>
+        <main id = "folders"></main>
+        <dialog id = "preview">
+            <button class = "close" onclick = "document.getElementById('preview').close()">
+                Close
+            </button>
+            <input id = "name" style = "text-align: center; font-size: 25px; width: 100%; margin-top: 25px;" />
+            <img id = "preview-icon" width = "50%" height = "50%" style = "display: block; margin-left: auto; margin-right: auto; margin-top: 25px;" />
+            <p style = "text-align: center;">
+                file in <span id = "type" style = "text-decoration: underline;"></span> format
+            </p>
+            <div style = "display: flex; align-items: center; justify-content: center; margin-top: 5px;">
+                <button id = "preview-link" style = "margin-right: 10px;"></button>
+                <button id = "delete" class = "danger" style = "margin-right: 10px;">
+                    Delete
+                </button>
+                <select id = "preview-folders">
+                </select>
+            </div>
+        </dialog>
+        <dialog id = "create-folder">
+            <button class = "close" onclick = "document.getElementById('create-folder').close()">
+                Close
+            </button>
+            <h2>Create Folder</h2>
+            <form action = "/api/create-folder" method = "POST">
+                <input name = "name" placeholder = "folder name…" style = "display: block; margin-bottom: 10px;" required />
+                <button type = "submit">Create</button>
+            </form>
+        </dialog>
+        <dialog id = "upload-file">
+            <form id = "upload" action = "/api/upload" method = "POST" enctype = "multipart/form-data" style = "display: flex; align-items: center; margin-left: auto;">
+                <input type = "file" name = "file" />
+                <select name = "folder" id = "folders" style = "margin-left: 10px;"></select>
+                <button type = "submit" style = "margin-left: 10px;">
+                    Upload
+                </button>
+            </form>
+        </dialog>
+
+        <script>
+            // loading folders
+            const folders = JSON.parse(`<%- folders %>`);
+            if (folders.length === 0) {
+                document.querySelector("#folders").style.display = "none";
+
+                const p = document.createElement("p");
+                p.style.color = "red";
+                p.style.textAlign = "center";
+                p.innerText = "No folders found.";
+                document.body.appendChild(p);
+
+                document.querySelector("input[type = 'file']").disabled = true;
+            } else {
+                folders.forEach((folder, i) => {
+                    // options for selection in uploading and preview dialogs
+                    const folder_element = document.createElement("option");
+
+                    folder_element.value = folder.toLowerCase();
+                    folder_element.innerText = folder;
+
+                    document.querySelector("select#folders").appendChild(folder_element);
+
+                    // folders
+                    const div = document.createElement("div");
+                    div.id = folder.toLowerCase();
+                    div.className = "folder";
+                    div.style.marginRight = "10px";
+
+                    const input = document.createElement("input");
+                    input.value = folder;
+                    input.style = "width: 100%; text-align: center; font-size: 25px;";
+                    input.addEventListener("change", async () => {
+                        await fetch("/api/rename-folder", {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                name: folder,
+                                new_name: input.value
+                            })
+                        });
+
+                        window.location.reload();
+                    })
+
+                    div.appendChild(input);
+
+                    document.querySelector("main#folders").appendChild(div);
+                })
+            }
+
+            // loading my file uploads
+            const uploads = JSON.parse(`<%- uploads %>`);
+
+            uploads.forEach((upload, i) => {
+                const div = document.createElement("div");
+                div.innerText = `${upload.type.split("/")[1]} | ${upload.name}`;
+                div.className = "file";
+                div.addEventListener("click", () => {
+                    // options in preview dialog
+                    document.getElementById("preview-folders").innerHTML = "";
+
+                    folders.forEach((folder, i) => {
+                        const folder_element = document.createElement("option");
+
+                        folder_element.value = folder.toLowerCase();
+                        folder_element.innerText = folder;
+
+                        if (folder === upload.folder) {
+                            folder_element.selected = true;
+                        }
+
+                        document.getElementById("preview-folders").appendChild(folder_element);
+                    })
+                    
+
+                    document.getElementById("preview").showModal();
+                    document.getElementById("name").value = upload.name;
+                    document.getElementById("type").innerText = upload.type.split("/")[1];
+
+                    og_file_name = upload.name;
+
+                    switch (upload.type) {
+                        case "application/zip":
+                            document.getElementById("preview-icon").src = "/icons/zip.png";
+                            break;
+                        case "video/mp4": case "video/quicktime":
+                            document.getElementById("preview-icon").src = "/icons/video.png";
+                            break;
+                        case "image/jpeg": case "image/png": case "image/webp": case "image/jpg":
+                            document.getElementById("preview-icon").src = "/icons/image.png";
+                            break;
+                        case "application/pdf":
+                            document.getElementById("preview-icon").src = "/icons/pdf.png";
+                            break;
+                        case "audio/flac": case "audio/mp3": case "audio/m4a":
+                            document.getElementById("preview-icon").src = "/icons/audio.png";
+                            break;
+                        default:
+                            document.getElementById("preview-icon").src = "/icons/file.png";
+                            break;
+                    }
+
+                    document.getElementById("preview-link").innerHTML = `Go to <b>${upload.name}.${upload.type.split("/")[1]}</b>`;
+                    document.getElementById("preview-link").addEventListener("click", () => {
+                        window.location.href = upload.path;
+                    })
+                })
+                
+                document.getElementById(upload.folder).appendChild(div);
+            })
+
+            // changing file name
+            let og_file_name;
+
+            document.getElementById("name").addEventListener("change", async () => {
+                await fetch("/api/rename-file", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: og_file_name,
+                        new_name: document.getElementById("name").value
+                    })
+                });
+
+                window.location.reload();
+            })
+
+            // deleting a file
+            document.getElementById("delete").addEventListener("click", async () => {
+                await fetch("/api/delete", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById("name").value,
+                    })
+                });
+
+                window.location.reload();
+            })
+
+            // moving files
+            document.getElementById("preview-folders").addEventListener("change", async () => {
+                await fetch("/api/move-file", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        name: document.getElementById("name").value,
+                        folder: document.getElementById("preview-folders").value
+                    })
+                });
+
+                window.location.reload();
+            })
+        </script>
+    </body>
+</html>

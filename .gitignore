@@ -1,0 +1,5 @@
+db/uploads.json
+db/folders.json
+public/uploads
+node_modules
+.env
