@@ -38,6 +38,7 @@ dialog button.close {
     cursor: pointer;
     display: block;
     margin-left: auto;
+    margin-bottom: 25px;
 }
 
 select {
@@ -48,6 +49,7 @@ select {
 input {
     font-family: Verdana, sans-serif;
     box-sizing: border-box;
+    display: block;
 }
 input[type = "file"] {
     cursor: pointer;
@@ -58,15 +60,21 @@ button {
     max-width: 200px;
     overflow: auto;
     font-family: Verdana, sans-serif;
+    display: block;
 }
 button.danger {
     background-color: #ff0000;
     border-color: #af0303;
     color: #fff;
+    border-radius: 50px;
 }
 button.danger:hover {
     background-color: #af0303;
     border-color: #ff0000;
+}
+
+h2 {
+    font-weight: normal;
 }
 
 nav {

@@ -1,5 +1,5 @@
-db/uploads.json
+db/files.json
 db/folders.json
-public/uploads
+public/files
 node_modules
 .env

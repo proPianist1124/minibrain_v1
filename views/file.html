@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <link rel = "stylesheet" href = "/style.css" />
+        <link rel = "icon" type = "image/x-icon" href = "<%- favicon %>" />
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <a href = "/" style = "text-decoration: none;">
+            <button style = "margin: auto; margin-bottom: 25px;">Go Back</button>
+        </a>
+        <embed id = "file" width = "20%" height = "20%" style = "display: block; margin: auto;" />
+        <script>
+            const file = JSON.parse(`<%- file %>`);
+
+            document.title = `${file.name} | <%- name %>`;
+
+            document.getElementById("file").src = `/files/${file.original}`;
+            document.getElementById("file").type = file.type;
+
+            if (file.type.startsWith("application") || file.type.startsWith("video")) {
+                document.getElementById("file").style.width = "100%";
+                document.getElementById("file").style.height = "85vh";
+            }
+        </script>
+    </body>
+</html>
