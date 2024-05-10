@@ -8,12 +8,10 @@
     </head>
     <body>
         <img src = "<%- favicon %>" width = "40" height = "40" style = "display: block; margin-left: auto; margin-right: auto; margin-bottom: 20px;" />
-        <div style = "display: flex; align-items: center; justify-content: center;">
-            <form id = "login">
-                <input id = "password" type = "password" placeholder = "password" style = "margin-right: 5px;" />
-                <button type = "submit">login</button>
-            </form>
-        </div>
+        <form id = "login" style = "display: flex; align-items: center; justify-content: center;">
+            <input id = "password" type = "password" placeholder = "password" style = "margin-right: 5px;" />
+            <button type = "submit">login</button>
+        </form>
         <p id = "error" style = "text-align: center; color: red;"></p>
 
         <script>
@@ -32,7 +30,7 @@
                 res = await res.json();
 
                 if (res.success) {
-                    window.location.reload();
+                    window.location.href = "/";
                 } else {
                     document.getElementById("error").innerText = res.error;
                 }

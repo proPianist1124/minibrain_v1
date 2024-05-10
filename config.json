@@ -1,5 +1,5 @@
 {
     "name": "MiniBrain",
     "favicon": "/favicon.ico",
-    "protected": false
+    "protected": true
 }

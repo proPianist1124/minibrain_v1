@@ -1,0 +1,21 @@
+<nav>
+    <img src = "<%- favicon %>" width = "50" height = "50" />
+    <h2 onclick = "window.location.href = '/'" style = "margin-left: 5px; cursor: pointer;">
+        <%- name %>
+        <span style = "font-style: italic; color: var(--secondary-darker); font-size: 16px;">a better way to organize</span>
+    </h2>
+    <div id = "hide" style = "margin-left: auto; display: flex; align-items: center;">
+        <button onclick = "document.getElementById('upload-file').showModal()">
+            Upload
+        </button>
+        <button onclick = "document.getElementById('create-folder').showModal()" style = "margin-left: 10px;">
+            New
+        </button>
+    </div>
+</nav>
+
+<script>
+    if (`<%- protected %>` == "true") {
+        document.querySelector("div#hide").style.display = "none";
+    }
+</script>

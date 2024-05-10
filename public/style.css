@@ -87,11 +87,8 @@ nav {
 }
 
 main {
-    display: grid;
-    grid-template-columns: auto auto auto;
-    justify-content: space-evenly;
     border: 1px solid var(--secondary);
-    padding: 35px 0px;
+    padding: 35px 10px;
     overflow: auto;
 }
 
@@ -104,14 +101,4 @@ div.folder {
     text-align: left;
     box-sizing: border-box;
     overflow: auto;
-}
-
-@media (max-width: 800px) {
-    main {
-        display: block;
-    }
-
-    div.folder {
-        width: 100%;
-    }
 }

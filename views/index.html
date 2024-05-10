@@ -1,23 +1,14 @@
 <!DOCTYPE html>
 <html lang = "en">
     <head>
-        <title>Dashboard | <%- name %></title>
+        <title>Files | <%- name %></title>
         <link rel = "stylesheet" href = "/style.css" />
         <link rel = "icon" type = "image/x-icon" href = "<%- favicon %>" />
         <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
     </head>
     <body>
-        <nav>
-            <img src = "<%- favicon %>" width = "50" height = "50" />
-            <h2 onclick = "window.location.href = 'https://github.com/proPianist1124/minibrain'" style = "margin-left: 5px; cursor: pointer;"><%- name %></h2>
-            <button onclick = "document.getElementById('create-folder').showModal()" style = "margin-left: auto;">
-                Create Folder
-            </button>
-            <button onclick = "document.getElementById('upload-file').showModal()" style = "margin-left: 15px;">
-                Upload
-            </button>
-        </nav>
-        <main id = "folders"></main>
+        <%- include("components/navbar.html") %> 
+        <main id = "folders" style = "display: grid; grid-template-columns: auto auto auto; justify-content: space-evenly;"></main>
         <dialog id = "preview">
             <button class = "close" onclick = "document.getElementById('preview').close()">
                 Close
@@ -28,6 +19,9 @@
                 file in <span id = "type" style = "text-decoration: underline;"></span> format
             </p>
             <div style = "display: flex; align-items: center; justify-content: center; margin-top: 5px;">
+                <button id = "file-original" style = "margin-right: 10px;">
+                    View Original
+                </button>
                 <button id = "preview-link" style = "margin-right: 10px;"></button>
                 <select id = "preview-folders" style = "margin-right: 10px;">
                 </select>
@@ -67,12 +61,19 @@
                 Color:&nbsp;<input id = "folder-color" type = "color" />
                 <button id = "folder-color-reset" style = "margin-left :5px;">Reset to Default</button>
             </div>
-            <button id = "delete-folder" class = "danger" style = "margin-top: 20px;">Delete Folder</button>
+            <button id = "delete-folder" class = "danger" style = "margin-top: 30px;">Delete Folder</button>
         </dialog>
 
         <script>
-            // loading folders
+            // protection
+            if (`<%- protected %>` == "true") {
+                document.getElementById("delete-file").style.display = "none";
+                document.getElementById("preview-folders").style.display = "none";
+            }
+
             const folders = JSON.parse(`<%- folders %>`);
+
+            // loading folders
             if (folders.length === 0) {
                 document.querySelector("#folders").style.display = "none";
 
@@ -121,17 +122,30 @@
                     });
 
                     const button = document.createElement("button");
-                    button.style = "font-size: 25px; margin-left: 5px;";
+                    button.style = "font-size: 25px; margin-left: 5px; width: 20%;";
                     button.innerText = "Edit";
                     button.addEventListener("click", () => {
                         document.getElementById("folder-settings").showModal();
 
                         document.getElementById("folder-name").innerText = folder.name;
                         document.getElementById("folder-color").value = folder.color;
+                        document.getElementById("folder-link").href = `/folders/${folder.name}`;
+                    });
+
+                    const go_button = document.createElement("button");
+                    go_button.style = "font-size: 25px; margin-left: 5px; width: 20%;";
+                    go_button.innerText = "Go";
+                    go_button.addEventListener("click", () => {
+                        window.location.href = `/folders/${folder.name}`;
                     });
 
                     div2.appendChild(input);
-                    div2.appendChild(button);
+                    div2.appendChild(go_button);
+                    
+                    if (`<%- protected %>` == "false") {
+                        div2.appendChild(button);
+                    }
+
                     div.appendChild(div2);
 
                     document.querySelector("main#folders").appendChild(div);
@@ -163,6 +177,9 @@
                     });
 
                     document.getElementById("preview").showModal();
+                    document.getElementById("file-original").addEventListener("click", () => {
+                        window.open(`/files/${file.original}`, "_blank");
+                    });
                     document.getElementById("file-name").value = file.name;
                     document.getElementById("type").innerText = file.type.split("/")[1];
 

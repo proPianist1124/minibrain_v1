@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <head>
+        <link rel = "stylesheet" href = "/style.css" />
+        <link rel = "icon" type = "image/x-icon" href = "<%- favicon %>" />
+        <meta name = "viewport" content = "width=device-width, initial-scale=1.0" />
+    </head>
+    <body>
+        <%- include("components/navbar.html") %> 
+        <main>
+            <h2 id = "name"></h2>
+        </main>
+        <script>
+            const folder = JSON.parse(`<%- folder %>`);
+            const files = JSON.parse(`<%- files %>`);
+
+            document.getElementById("name").innerText = folder.name;
+
+            files.forEach((file) => {
+                const div = document.createElement("div");
+                div.className = "file";
+                div.innerText = file.name;
+                div.addEventListener("click", () => {
+                    window.location.href = `/files/${file.original}`;
+                });
+
+                document.querySelector("main").appendChild(div);
+            })
+
+            document.title = `${folder.name} | <%- name %>`;
+        </script>
+    </body>
+</html>

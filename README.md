@@ -1,8 +1,12 @@
+## Todo
+1. Add `upload` to top of folder instead to provide better UX
+2. Add "viewer mode", where you can only view uploads but you can't edit anything
+
 # MiniBrain CDN
 > **We suggest using [Pinggy](https://pinggy.io) to host your MiniBrain Instance**
 
 ## Setting Up
-Go to the `config.js` file and edit the configuration for your MiniBrain as you wish. If you enable `protected`, please create a `.env` file and populate it with the environment variable `PASSWORD=<your_password>`. Therefore, when others try to access your MiniBrain instance, they will be met with a password input.
+Go to the `config.json` file and edit the configuration for your MiniBrain as you wish. If you enable `protected`, please create a `.env` file and populate it with the environment variable `PASSWORD=<your_password>`. Therefore, when others try to access your MiniBrain instance, they will be met with a password input.
 
 ## Starting the Server
 Go to your terminal and enter `npm run start`, which should start running the production build. If you're interested customizing MiniBrain, run `npm run dev`, which will start a nodemon instance where every change you make will be part of the instance.

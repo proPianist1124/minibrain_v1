@@ -28,8 +28,8 @@ const config = JSON.parse(fs.readFileSync("config.json","utf-8"));
 
 // custom middleware
 app.use((req, res, next) => {
-    if (config.protected == true) {
-        if (req.url != "/api/login") {
+    /*if (config.protected == true) {
+        if (req.url == "/") {
             if (!req.cookies || req.cookies.login != process.env.password) {
                 res.render("login", {
                     name: config.name,
@@ -43,8 +43,9 @@ app.use((req, res, next) => {
         }
     } else {
         next();
-    }
-})
+    }*/
+    next();
+});
 
 app.get("/", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
@@ -52,12 +53,21 @@ app.get("/", (req, res) => {
 
     res.render("index", {
         name: config.name,
+        protected: config.protected == true ? req.cookies.login == process.env.password ? false : true : false,
         favicon: config.favicon,
         files: JSON.stringify(fi.files.reverse()),
         folders: JSON.stringify(fo.folders.reverse())
     });
 });
 
+app.get("/login", (req, res) => {
+    res.render("login", {
+        name: config.name,
+        favicon: config.favicon
+    });
+});
+
+// my file
 app.get("/f/:file", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
     let file = fi.files.find(find_file);
@@ -71,6 +81,34 @@ app.get("/f/:file", (req, res) => {
         favicon: config.favicon,
         file: JSON.stringify(file)
     });
+});
+
+// my folder
+app.get("/folders/:folder", (req, res) => {
+    let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
+    let fo = JSON.parse(fs.readFileSync("db/folders.json","utf-8"));
+
+    let folder = fo.folders.find(find_folder);
+
+    function find_folder(name) {
+        return name.name == req.params.folder;
+    }
+
+    const files = [];
+
+    fi.files.forEach((file, i) => {
+        if (file.folder == req.params.folder) {
+            files.push(file);
+        }
+    });
+
+    res.render("folder", {
+        name: config.name,
+        favicon: config.favicon,
+        protected: config.protected == true ? req.cookies.login == process.env.password ? false : true : false,
+        folder: JSON.stringify(folder),
+        files: JSON.stringify(files)
+    })
 });
 
 // uploading files
@@ -101,11 +139,11 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
 app.post("/api/delete-file", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
 
-    fi.files.forEach((file) => {
+    fi.files.forEach((file, i) => {
         if (file.name == req.body.name) {
             fs.unlinkSync(`public/files/${file.original}`);
 
-            fi.files.splice(fi.files.indexOf(file), 1);
+            fi.files.splice(i, 1);
         }
     });
 
@@ -205,7 +243,7 @@ app.post("/api/change-folder-color", (req, res) => {
     fs.writeFileSync("db/folders.json", JSON.stringify(fo), "utf-8");
 
     res.json({ success: true });
-})
+});
 
 // moving files
 app.post("/api/move-file", (req, res) => {
