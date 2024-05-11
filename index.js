@@ -28,22 +28,6 @@ const config = JSON.parse(fs.readFileSync("config.json","utf-8"));
 
 // custom middleware
 app.use((req, res, next) => {
-    /*if (config.protected == true) {
-        if (req.url == "/") {
-            if (!req.cookies || req.cookies.login != process.env.password) {
-                res.render("login", {
-                    name: config.name,
-                    favicon: config.favicon
-                })
-            } else {
-                next();
-            }
-        } else {
-            next();
-        }
-    } else {
-        next();
-    }*/
     next();
 });
 
@@ -51,13 +35,17 @@ app.get("/", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
     let fo = JSON.parse(fs.readFileSync("db/folders.json","utf-8"));
 
-    res.render("index", {
-        name: config.name,
-        protected: config.protected == true ? req.cookies.login == process.env.password ? false : true : false,
-        favicon: config.favicon,
-        files: JSON.stringify(fi.files.reverse()),
-        folders: JSON.stringify(fo.folders.reverse())
-    });
+    if (!req.cookies || req.cookies.login != process.env.password) {
+        res.redirect("/login");
+    } else {
+        res.render("index", {
+            name: config.name,
+            protected: config.protected == true ? req.cookies.login == process.env.password ? false : true : false,
+            favicon: config.favicon,
+            files: JSON.stringify(fi.files.reverse()),
+            folders: JSON.stringify(fo.folders.reverse())
+        });
+    }
 });
 
 app.get("/login", (req, res) => {
@@ -107,7 +95,7 @@ app.get("/folders/:folder", (req, res) => {
         favicon: config.favicon,
         protected: config.protected == true ? req.cookies.login == process.env.password ? false : true : false,
         folder: JSON.stringify(folder),
-        files: JSON.stringify(files)
+        files: JSON.stringify(files.reverse())
     })
 });
 
@@ -117,7 +105,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
         let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
 
         let file_name = req.file.originalname;
-        file_name = file_name.split(".")
+        file_name = file_name.split(".");
 
         fi.files.push({
             type: req.file.mimetype,
@@ -125,7 +113,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
             original: req.file.originalname,
             path: `/f/${req.file.originalname}`,
             folder: req.body.folder,
-        })
+        });
 
         fs.writeFileSync("db/files.json", JSON.stringify(fi), "utf-8");
 

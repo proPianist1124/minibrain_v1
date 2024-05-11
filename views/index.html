@@ -65,12 +65,6 @@
         </dialog>
 
         <script>
-            // protection
-            if (`<%- protected %>` == "true") {
-                document.getElementById("delete-file").style.display = "none";
-                document.getElementById("preview-folders").style.display = "none";
-            }
-
             const folders = JSON.parse(`<%- folders %>`);
 
             // loading folders
@@ -141,10 +135,7 @@
 
                     div2.appendChild(input);
                     div2.appendChild(go_button);
-                    
-                    if (`<%- protected %>` == "false") {
-                        div2.appendChild(button);
-                    }
+                    div2.appendChild(button);
 
                     div.appendChild(div2);
 

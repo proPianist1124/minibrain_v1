@@ -1,6 +1,5 @@
 ## Todo
 1. Add `upload` to top of folder instead to provide better UX
-2. Add "viewer mode", where you can only view uploads but you can't edit anything
 
 # MiniBrain CDN
 > **We suggest using [Pinggy](https://pinggy.io) to host your MiniBrain Instance**

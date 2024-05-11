@@ -2,7 +2,7 @@
     <img src = "<%- favicon %>" width = "50" height = "50" />
     <h2 onclick = "window.location.href = '/'" style = "margin-left: 5px; cursor: pointer;">
         <%- name %>
-        <span style = "font-style: italic; color: var(--secondary-darker); font-size: 16px;">a better way to organize</span>
+        <span style = "font-style: italic; color: var(--secondary-darker); font-size: 16px;">badass file organizer</span>
     </h2>
     <div id = "hide" style = "margin-left: auto; display: flex; align-items: center;">
         <button onclick = "document.getElementById('upload-file').showModal()">
@@ -16,6 +16,21 @@
 
 <script>
     if (`<%- protected %>` == "true") {
-        document.querySelector("div#hide").style.display = "none";
+        document.querySelector("div#hide").innerHTML = "";
+
+        const p = document.createElement("p");
+        p.style = "display: flex; align-items: center;"
+        p.innerHTML = `
+            <svg xmlns = "http://www.w3.org/2000/svg" width = "17.5" height = "17.5" viewBox = "0 0 24 24" fill = "none" stroke = "currentColor" stroke-width = "2" stroke-linecap = "round" stroke-linejoin = "round">
+                <path stroke = "none" d = "M0 0h24v24H0z" fill = "none" />
+                <path d = "M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0" />
+                <path d = "M6 21v-2a4 4 0 0 1 4 -4h3.5" />
+                <path d = "M19 22v.01" />
+                <path d = "M19 19a2.003 2.003 0 0 0 .914 -3.782a1.98 1.98 0 0 0 -2.414 .483" />
+            </svg>
+            &nbsp;Guest
+        `;
+
+        document.querySelector("div#hide").appendChild(p);
     }
 </script>
