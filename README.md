@@ -1,5 +1,6 @@
 ## Todo
-1. Add `upload` to top of folder instead to provide better UX
+1. Rewrite codebase to sveltekit
+2. Add `upload` to top of folder instead to provide better UX
 
 # MiniBrain CDN
 > **We suggest using [Pinggy](https://pinggy.io) to host your MiniBrain Instance**

@@ -21,7 +21,7 @@ const storage = multer.diskStorage(
             cb(null, file.originalname);
         }
     }
-)
+);
 const upload = multer({ storage });
 
 const config = JSON.parse(fs.readFileSync("config.json","utf-8"));

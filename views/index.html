@@ -30,28 +30,6 @@
                 </button>
             </div>
         </dialog>
-        <dialog id = "create-folder">
-            <button class = "close" onclick = "document.getElementById('create-folder').close()">
-                Close
-            </button>
-            <h2>Create Folder</h2>
-            <form action = "/api/create-folder" method = "POST">
-                <input name = "name" placeholder = "folder name…" style = "margin-bottom: 10px;" required />
-                <button type = "submit">Create</button>
-            </form>
-        </dialog>
-        <dialog id = "upload-file">
-            <button class = "close" onclick = "document.getElementById('upload-file').close()">
-                Close
-            </button>
-            <form id = "upload" action = "/api/upload" method = "POST" enctype = "multipart/form-data" style = "display: flex; align-items: center; margin-left: auto;">
-                <input type = "file" name = "file" />
-                <select name = "folder" id = "folders" style = "margin-left: 10px;"></select>
-                <button type = "submit" style = "margin-left: 10px;">
-                    Upload
-                </button>
-            </form>
-        </dialog>
         <dialog id = "folder-settings">
             <button class = "close" onclick = "document.getElementById('folder-settings').close()">
                 Close
@@ -192,6 +170,9 @@
                         case "audio/flac": case "audio/mp3": case "audio/m4a":
                             document.getElementById("preview-icon").src = "/icons/audio.png";
                             break;
+                        case "image/gif":
+                            document.getElementById("preview-icon").src = "/icons/gif.png";
+                            break;
                         default:
                             document.getElementById("preview-icon").src = "/icons/file.png";
                             break;
@@ -262,7 +243,7 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        name: document.getElementById("name").value,
+                        name: document.getElementById("file-name").value,
                         folder: document.getElementById("preview-folders").value
                     })
                 });

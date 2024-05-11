@@ -17,14 +17,23 @@
             document.getElementById("name").innerText = folder.name;
 
             files.forEach((file) => {
+                // div component for each file
                 const div = document.createElement("div");
                 div.className = "file";
-                div.innerText = file.name;
+                div.innerText = `${file.type.split("/")[1]} | ${file.name}`;
                 div.addEventListener("click", () => {
                     window.location.href = `/files/${file.original}`;
                 });
 
                 document.querySelector("main").appendChild(div);
+
+                // option element for select element in upload dialog
+                const folder_element = document.createElement("option");
+
+                folder_element.value = folder.name.toLowerCase();
+                folder_element.innerText = folder.name;
+
+                document.querySelector("select#folders").appendChild(folder_element);
             })
 
             document.title = `${folder.name} | <%- name %>`;
