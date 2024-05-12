@@ -1,5 +1,6 @@
 {
     "name": "MiniBrain",
     "favicon": "/favicon.ico",
-    "protected": true
+    "protected": true,
+    "port": 3000
 }

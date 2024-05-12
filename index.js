@@ -16,7 +16,7 @@ app.use(express.static(`${__dirname}/public`));
 
 const storage = multer.diskStorage(
     {
-        destination: "public/files/",
+        destination: "public/f/",
         filename: function (req, file, cb) {
             cb(null, file.originalname);
         }
@@ -56,23 +56,30 @@ app.get("/login", (req, res) => {
 });
 
 // my file
-app.get("/f/:file", (req, res) => {
+app.get("/file/:file", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
+    let fo = JSON.parse(fs.readFileSync("db/folders.json","utf-8"));
+
     let file = fi.files.find(find_file);
+    let folder = fo.folders.find(find_folder);
 
     function find_file(name) {
         return name.original == req.params.file;
+    }
+    function find_folder(name) {
+        return name.name == file.folder;
     }
 
     res.render("file", {
         name: config.name,
         favicon: config.favicon,
-        file: JSON.stringify(file)
+        file: JSON.stringify(file),
+        color: folder.color
     });
 });
 
 // my folder
-app.get("/folders/:folder", (req, res) => {
+app.get("/folder/:folder", (req, res) => {
     let fi = JSON.parse(fs.readFileSync("db/files.json","utf-8"));
     let fo = JSON.parse(fs.readFileSync("db/folders.json","utf-8"));
 
@@ -111,7 +118,7 @@ app.post("/api/upload", upload.single("file"), function (req, res) {
             type: req.file.mimetype,
             name: file_name[0],
             original: req.file.originalname,
-            path: `/f/${req.file.originalname}`,
+            path: `/file/${req.file.originalname}`,
             folder: req.body.folder,
         });
 
@@ -129,7 +136,7 @@ app.post("/api/delete-file", (req, res) => {
 
     fi.files.forEach((file, i) => {
         if (file.name == req.body.name) {
-            fs.unlinkSync(`public/files/${file.original}`);
+            fs.unlinkSync(`public/f/${file.original}`);
 
             fi.files.splice(i, 1);
         }
@@ -149,7 +156,7 @@ app.post("/api/delete-folder", (req, res) => {
         if (folder.name == req.body.name) {
             fi.files.forEach((file) => {
                 if (file.folder == req.body.name) {
-                    fs.unlinkSync(`public/files/${file.original}`);
+                    fs.unlinkSync(`public/f/${file.original}`);
                     fi.files.splice(fi.files.indexOf(file), 1);
                 }
             });
@@ -258,8 +265,8 @@ app.post("/api/login", (req, res) => {
     }
 });
 
-app.listen(3000, () => {
-    console.log(`Server is running on port 3000`);
+app.listen(config.port, async () => {
+    console.log(`\nServer is running on port ${config.port}`);
 
     if (fs.existsSync("db/folders.json") == false) {
         fs.appendFile("db/folders.json", `{ "folders": [] }`, () => {});

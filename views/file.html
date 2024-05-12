@@ -7,28 +7,48 @@
     </head>
     <body>
         <div style = "display: flex; align-items: center; justify-content: center; margin-bottom: 25px;">
-            <a href = "/" style = "text-decoration: none;">
+            <p id = "color" style = "margin-right: 5px;">
+                ○
+            </p>
+            <a href = "/" style = "text-decoration: none; margin-right: 5px;">
                 <button>Go Back</button>
             </a>
-            <a id = "download" style = "text-decoration: none; margin-left: 5px;" download>
+            <a id = "original" style = "text-decoration: none; margin-right: 5px;">
+                <button>View Original</button>
+            </a>
+            <a id = "download" style = "text-decoration: none;" download>
                 <button>Download</button>
             </a>
         </div>
-        <embed id = "file" width = "20%" height = "20%" style = "display: block; margin: auto;" />
+        <embed id = "file" style = "display: block; margin: auto;" />
         <script>
+            document.getElementById("color").style.color = `<%- color %>`;
+
+            // file information
             const file = JSON.parse(`<%- file %>`);
 
             document.title = `${file.name} | File | <%- name %>`;
 
-            document.getElementById("file").src = `/files/${file.original}`;
+            document.getElementById("file").src = `/f/${file.original}`;
             document.getElementById("file").type = file.type;
 
             if (file.type.startsWith("application") || file.type.startsWith("video")) {
                 document.getElementById("file").style.width = "100%";
                 document.getElementById("file").style.height = "85vh";
+            } else {
+                const img = new Image();
+
+                img.onload = function() {
+                    if (this.width > window.screen.width || this.height > window.screen.height) {
+                        document.getElementById("file").style.width = "100vw";
+                        document.getElementById("file").style.height = "100vh";
+                    }
+                }
+                img.src = `/f/${file.original}`;
             }
 
-            document.getElementById("download").href = `/files/${file.original}`;
+            document.getElementById("original").href = `/f/${file.original}`;
+            document.getElementById("download").href = `/f/${file.original}`;
         </script>
     </body>
 </html>

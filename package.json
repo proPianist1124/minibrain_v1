@@ -1,7 +1,6 @@
 {
     "scripts": {
-        "start": "clear; node index.js",
-        "dev": "nodemon index.js;"
+        "start": "clear; nodemon index.js;"
     },
     "dependencies": {
         "cookie-parser": "^1.4.6",

@@ -7,7 +7,7 @@
     </head>
     <body>
         <%- include("components/navbar.html") %> 
-        <main>
+        <main id = "color">
             <h2 id = "name"></h2>
         </main>
         <script>
@@ -15,6 +15,7 @@
             const files = JSON.parse(`<%- files %>`);
 
             document.getElementById("name").innerText = folder.name;
+            document.getElementById("color").style.borderColor = folder.color;
 
             files.forEach((file) => {
                 // div component for each file
@@ -22,7 +23,7 @@
                 div.className = "file";
                 div.innerText = `${file.type.split("/")[1]} | ${file.name}`;
                 div.addEventListener("click", () => {
-                    window.location.href = `/files/${file.original}`;
+                    window.location.href = file.path;
                 });
 
                 document.querySelector("main").appendChild(div);

@@ -2,6 +2,8 @@
     --primary: #000;
     --secondary: #c9c8c8;
     --secondary-darker: #9e9e9e;
+    --secondary-darkest:#5a5959;
+    --font: Monospace, sans-serif;
     --folder: #fdfd96;
 }
 
@@ -12,19 +14,7 @@
 html, body {
     margin: 10px;
     color: var(--primary);
-    font-family: Tahoma, sans-serif;
-}
-
-div.file {
-    margin-top: 10px;
-    display: block;
-    background-color: var(--secondary);
-    color: #fff;
-    padding: 5px;
-    cursor: pointer;
-}
-div.file:hover {
-    background-color: var(--secondary-darker);
+    font-family: var(--font);
 }
 
 dialog {
@@ -42,31 +32,48 @@ dialog button.close {
 }
 
 select {
-    font-family: Verdana, sans-serif;
+    font-family: var(--font);
     cursor: pointer;
 }
 
 input {
-    font-family: Verdana, sans-serif;
+    font-family: var(--font);
     box-sizing: border-box;
     display: block;
+    height: 22px;
+    border-radius: 0px;
+    border: 1px solid var(--primary);
+    color: var(--primary);
+    outline: none;
 }
 input[type = "file"] {
     cursor: pointer;
+    border: none;
+}
+input:focus {
+    border-color: var(--secondary-darker);
 }
 
 button {
     cursor: pointer;
     max-width: 200px;
     overflow: auto;
-    font-family: Verdana, sans-serif;
+    font-family: var(--font);
     display: block;
+    border: 1px solid var(--primary);
+    background-color: #efefef;
+    color: var(--primary);
+    border-radius: 0px;
+}
+button:hover {
+    border-color: var(--secondary-darker);
 }
 button.danger {
     background-color: #ff0000;
     border-color: #af0303;
     color: #fff;
     border-radius: 50px;
+    padding: 5px 10px;
 }
 button.danger:hover {
     background-color: #af0303;
@@ -75,6 +82,14 @@ button.danger:hover {
 
 h2 {
     font-weight: normal;
+}
+
+a {
+    text-decoration: underline;
+    color: var(--secondary-darker);
+}
+a:hover {
+    text-decoration: none;
 }
 
 nav {
@@ -90,6 +105,28 @@ main {
     border: 1px solid var(--secondary);
     padding: 35px 10px;
     overflow: auto;
+}
+
+footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    color: var(--primary);
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+div.file {
+    margin-top: 10px;
+    display: block;
+    background-color: var(--secondary);
+    color: #fff;
+    padding: 5px;
+    cursor: pointer;
+}
+div.file:hover {
+    background-color: var(--secondary-darker);
 }
 
 div.folder {

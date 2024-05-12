@@ -29,10 +29,12 @@
     <button class = "close" onclick = "document.getElementById('upload-file').close()">
         Close
     </button>
-    <form action = "/api/upload" method = "POST" enctype = "multipart/form-data" style = "display: flex; align-items: center; margin-left: auto;">
-        <input type = "file" name = "file" />
-        <select name = "folder" id = "folders" style = "margin-left: 10px;"></select>
-        <button type = "submit" style = "margin-left: 10px;">
+    <form action = "/api/upload" method = "POST" enctype = "multipart/form-data">
+        <div style = "display: flex; align-items: center;">
+            <input type = "file" name = "file" />
+            <select name = "folder" id = "folders" style = "margin-left: 10px;"></select>
+        </div>
+        <button type = "submit" style = "margin-top: 10px;">
             Upload
         </button>
     </form>
