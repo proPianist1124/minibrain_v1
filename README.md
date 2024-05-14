@@ -1,8 +1,3 @@
-## Todo
-1. Better image viewing in custom files page
-2. Color dot for folder color
-3. Add `upload` to top of folder instead to provide better UX
-
 # MiniBrain CDN
 > **We suggest using [Pinggy](https://pinggy.io) to host your MiniBrain Instance**
 
